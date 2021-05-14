@@ -33,19 +33,28 @@ async function getTasks() {
     tasksQuery.forEach(task => {
       result.push({
         ...task,
-        // task_id: task.task_id,
-        // task_description: task.task_description,
-        // task_notes: task.task_notes,
         task_completed: task.task_completed === 0 ? false : true,
-        // project_name: task.project_name,
-        // project_description: task.project_description,
       });
     });
   return result;
+}
+
+async function getTaskById(task_id) {
+  const taskQuery = await db('tasks as t').where('task_id', task_id).first();
+  return {
+    ...taskQuery,
+    task_completed: taskQuery.task_completed === 0 ? false: true
+  };
+}
+
+async function addTask(task) {
+  const newTaskId = await db('tasks as t').insert(task);
+  return getTaskById(newTaskId);
 }
 
 
 
 module.exports = {
   getTasks,
+  addTask,
 }
