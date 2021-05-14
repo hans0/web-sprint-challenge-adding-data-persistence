@@ -22,22 +22,24 @@ exports.up = async function(knex) {
         .notNullable()
         .references('project_id')
         .inTable('projects')
-        .onDelete('RESTRICT')
+        .onDelete('CASCADE')
     })
     .createTable('project_resources', table => {
       table.integer('project_id')
-        .unsigned()
-        .notNullable()
         .references('project_id')
         .inTable('projects')
+        .onDelete('CASCADE');
       table.integer('resource_id')
-        .unsigned()
-        .notNullable()
         .references('resource_id')
         .inTable('resources')
+        .onDelete('CASCADE');
     })
 };
 
-exports.down = function(knex) {
-  
+exports.down = async function(knex) {
+  await knex.schema
+    .dropTableIfExists('project_resources')
+    .dropTableIfExists('tasks')
+    .dropTableIfExists('resources')
+    .dropTableIfExists('projects')
 };
