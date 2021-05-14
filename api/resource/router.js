@@ -16,6 +16,12 @@ router.get('/', (req, res, next) => {
 
 
 // TODO: ROUTER POST
-
+router.post('/', (req, res, next) => {
+  resourcesModel.addResource(req.body)
+    .then(resource => {
+      res.status(201).json(resource)
+    })
+    .catch(next);
+});
 
 module.exports = router;
